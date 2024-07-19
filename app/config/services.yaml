@@ -1,0 +1,64 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@App\Security\AuthenticationSuccessHandler'
+            Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@App\Security\AuthenticationFailureHandler'
+
+    _instanceof:
+        App\Framework\Notification\StrategyInterface:
+            tags: ['app.notification.handler_strategy']
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+    gedmo.listener.loggable:
+        class: Gedmo\Loggable\LoggableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    gedmo.listener.timestampable:
+        class: Gedmo\Timestampable\TimestampableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ '@annotation_reader' ] ]
+
+    gedmo.listener.softdeleteable:
+        class: Gedmo\SoftDeleteable\SoftDeleteableListener
+        tags:
+            - { name: doctrine.event_listener, event: 'onFlush' }
+            - { name: doctrine.event_listener, event: 'loadClassMetadata' }
+        calls:
+            - [ setAnnotationReader, [ '@annotation_reader' ] ]
+
+    App\Service\User\TokenService:
+        arguments:
+            $baseUrl: '%env(APP_BASE_URL)%'
+            $secret: '%env(APP_SECRET)%'
+
+    App\Service\User\EmailVerificationService:
+        arguments:
+            $routeName: '%env(USER_EMAIL_VERIFICATION_ROUTE)%'
+            $tokenTtl: '%env(USER_EMAIL_VERIFICATION_TOKEN_TTL)%'
+
+    App\Service\User\PasswordRecoveryService:
+        arguments:
+            $routeName: '%env(USER_PASSWORD_RECOVERY_ROUTE)%'
+            $tokenTtl: '%env(USER_PASSWORD_RECOVERY_TOKEN_TTL)%'

@@ -1,0 +1,19 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+dashboard_controllers:
+    resource:
+        path: ../src/Controller/Web/Dashboard/
+        namespace: App\Controller\Web\Dashboard
+    prefix: /dashboard
+    type: attribute
+
+dashboard_admin_controllers:
+    resource:
+        path: ../src/Controller/Web/Dashboard/Admin/
+        namespace: App\Controller\Web\Dashboard\Admin
+    prefix: /dashboard/admin
+    type: attribute

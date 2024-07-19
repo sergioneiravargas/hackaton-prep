@@ -1,0 +1,18 @@
+.ea-detail {
+    .field-group {
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+        text-align: left !important;
+
+        .field-label {
+            margin: 0 !important;
+            text-align: left;
+
+        }
+
+        .field-value {
+            text-align: left !important;
+        }
+    }
+}
