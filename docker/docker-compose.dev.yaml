@@ -48,6 +48,7 @@ services:
         ports:
             - ${POSTGRES_PORT}:5432
         environment:
+            - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
         logging:
             options:
