@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ImageLoadController!{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div>
+        {{ form(form) }}
+    </div>
+    
+    <div>
+        <ul>
+        {%for item in damages %}
+            <li>{{ item.description }} ({{ item.repair_cost ? item.repair_cost : 'costo por definir' }})</li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
